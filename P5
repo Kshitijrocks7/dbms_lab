@@ -1,84 +1,98 @@
-
-create database lab;
-use lab;
--- Creating the Sailors table
+-- Create the Sailors table
 CREATE TABLE Sailors (
- sid INTEGER PRIMARY KEY,
- sname VARCHAR(50),
- rating INTEGER,
- age REAL
+    sid INT PRIMARY KEY,
+    sname VARCHAR(100) NOT NULL,
+    rating INT,
+    age REAL
 );
--- Creating the Boats table
+
+-- Create the Boats table
 CREATE TABLE Boats (
- bid INTEGER PRIMARY KEY,
- bname VARCHAR(50),
- color VARCHAR(20)
+    bid INT PRIMARY KEY,
+    bname VARCHAR(100) NOT NULL,
+    color VARCHAR(50) NOT NULL
 );
--- Creating the Reserves table
+
+-- Create the Reserves table
 CREATE TABLE Reserves (
- sid INTEGER,
- bid INTEGER,
- day DATE,
- PRIMARY KEY (sid, bid, day),
- FOREIGN KEY (sid) REFERENCES Sailors(sid),
- FOREIGN KEY (bid) REFERENCES Boats(bid)
+    sid INT,
+    bid INT,
+    day DATE,
+    PRIMARY KEY (sid, bid, day),
+    FOREIGN KEY (sid) REFERENCES Sailors(sid),
+    FOREIGN KEY (bid) REFERENCES Boats(bid)
 );
--- Inserting records into the Sailors table
+
+
+b) Insert around 10 records in each of the tables
+
+-- Insert records into the Sailors table
 INSERT INTO Sailors (sid, sname, rating, age) VALUES
-(1, 'John', 5, 25.5),
-(2, 'Paul', 7, 30.0),
-(3, 'George', 8, 22.3),
-(4, 'Ringo', 3, 35.4),
-(5, 'Mick', 6, 28.7),
-(6, 'Keith', 7, 24.1),
-(7, 'Charlie', 4, 32.8),
-(8, 'Ronnie', 5, 26.4),
-(9, 'Brian', 8, 29.0),
-(10, 'Roger', 6, 27.2);
--- Inserting records into the Boats table
+(1, 'John', 10, 25.5),
+(2, 'Paul', 8, 24.0),
+(3, 'George', 7, 26.3),
+(4, 'Ringo', 9, 30.0),
+(5, 'Mick', 8, 35.0),
+(6, 'Keith', 7, 40.0),
+(7, 'David', 9, 22.5),
+(8, 'Roger', 6, 29.0),
+(9, 'Freddie', 10, 33.0),
+(10, 'Elton', 8, 21.0);
+
+-- Insert records into the Boats table
 INSERT INTO Boats (bid, bname, color) VALUES
-(101, 'Sea Breeze', 'red'),
-(102, 'Sunset', 'blue'),
-(103, 'Wave Rider', 'green'),
-(104, 'Ocean Pearl', 'red'),
-(105, 'Sea Hawk', 'yellow'),
-(106, 'Blue Lagoon', 'blue'),
-(107, 'Coral Reef', 'red'),
-(108, 'Sunshine', 'yellow'),
-(109, 'Wind Walker', 'green'),
-(110, 'Wave Breaker', 'blue');
--- Inserting records into the Reserves table
+(101, 'Seafarer', 'red'),
+(102, 'Voyager', 'blue'),
+(103, 'Explorer', 'green'),
+(104, 'Adventurer', 'red'),
+(105, 'Wanderer', 'yellow'),
+(106, 'Pioneer', 'red'),
+(107, 'Navigator', 'blue'),
+(108, 'Mariner', 'green'),
+(109, 'Discoverer', 'yellow'),
+(110, 'Traveler', 'red');
+
+-- Insert records into the Reserves table
 INSERT INTO Reserves (sid, bid, day) VALUES
-(1, 101, '2023-06-01'),
-(2, 102, '2023-06-02'),
-(3, 103, '2023-06-03'),
-(4, 104, '2023-06-04'),
-(5, 105, '2023-06-05'),
-(6, 106, '2023-06-06'),
-(7, 107, '2023-06-07'),
-(8, 108, '2023-06-08'),
-(9, 109, '2023-06-09'),
-(10, 110, '2023-06-10'),
-(1, 104, '2023-06-11'),
-(2, 101, '2023-06-12'),
-(3, 107, '2023-06-13'),
-(4, 103, '2023-06-14'),
-(5, 109, '2023-06-15');
+(1, 101, '2024-07-01'),
+(2, 103, '2024-07-02'),
+(3, 104, '2024-07-03'),
+(4, 105, '2024-07-04'),
+(5, 106, '2024-07-05'),
+(6, 107, '2024-07-06'),
+(7, 108, '2024-07-07'),
+(8, 109, '2024-07-08'),
+(9, 110, '2024-07-09'),
+(10, 102, '2024-07-10');
+
+
+c) Find the names of sailors who have reserved a red boat, and list in the order of age
+
 SELECT s.sname
 FROM Sailors s
 JOIN Reserves r ON s.sid = r.sid
 JOIN Boats b ON r.bid = b.bid
 WHERE b.color = 'red'
 ORDER BY s.age;
+
+d) Find the names of sailors who have reserved boat 103
+
 SELECT s.sname
 FROM Sailors s
 JOIN Reserves r ON s.sid = r.sid
 WHERE r.bid = 103;
+
+e) Find the name and the age of the youngest sailor
+
 SELECT sname, age
 FROM Sailors
 ORDER BY age ASC
 LIMIT 1;
+
+f) Find the average age of sailors for each rating level that has at least two sailors
+
 SELECT rating, AVG(age) AS average_age
 FROM Sailors
 GROUP BY rating
-HAVING COUNT(sid) >= 2;
+HAVING COUNT(*) >= 2;
+
