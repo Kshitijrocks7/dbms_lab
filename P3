@@ -1,108 +1,132 @@
-
-create database Airline;
-use Airline;
+-- Create the Employees table
 CREATE TABLE Employees (
- eid INTEGER PRIMARY KEY,
- ename VARCHAR(100),
- salary INTEGER
+    eid INT PRIMARY KEY,
+    ename VARCHAR(100) NOT NULL,
+    salary INT NOT NULL
 );
+
+-- Create the Aircraft table
 CREATE TABLE Aircraft (
- aid INTEGER PRIMARY KEY,
- aname VARCHAR(100),
- cruisingrange INTEGER
+    aid INT PRIMARY KEY,
+    aname VARCHAR(100) NOT NULL,
+    cruisingrange INT NOT NULL
 );
-CREATE TABLE Flights (
- flno INTEGER PRIMARY KEY,
- from_city VARCHAR(100),
- to_city VARCHAR(100),
- distance INTEGER,
- departs TIME,
- arrives TIME,
- price INTEGER
-);
+
+-- Create the Certified table
 CREATE TABLE Certified (
- eid INTEGER,
- aid INTEGER,
- PRIMARY KEY (eid, aid),
- FOREIGN KEY (eid) REFERENCES Employees(eid),
- FOREIGN KEY (aid) REFERENCES Aircraft(aid)
+    eid INT,
+    aid INT,
+    PRIMARY KEY (eid, aid),
+    FOREIGN KEY (eid) REFERENCES Employees(eid),
+    FOREIGN KEY (aid) REFERENCES Aircraft(aid)
 );
--- Inserting into Employees
+
+-- Create the Flights table
+CREATE TABLE Flights (
+    flno INT PRIMARY KEY,
+    from_city VARCHAR(100) NOT NULL,
+    to_city VARCHAR(100) NOT NULL,
+    distance INT NOT NULL,
+    departs TIME NOT NULL,
+    arrives TIME NOT NULL,
+    price INT NOT NULL
+);
+
+
+b) Insert around 10 records in each of the tables
+
+-- Insert records into the Employees table
 INSERT INTO Employees (eid, ename, salary) VALUES
-(1, 'John Doe', 85000),
-(2, 'Jane Smith', 90000),
+(1, 'John Doe', 90000),
+(2, 'Jane Smith', 85000),
 (3, 'Emily Johnson', 75000),
 (4, 'Michael Brown', 95000),
-(5, 'Chris Davis', 78000),
-(6, 'Jessica Wilson', 82000),
-(7, 'Daniel Martinez', 60000),
-(8, 'Laura Taylor', 88000),
-(9, 'David Anderson', 76000),
-(10, 'Sarah Thomas', 83000);
--- Inserting into Aircraft
+(5, 'Chris Davis', 65000),
+(6, 'Anna Wilson', 80000),
+(7, 'James Moore', 78000),
+(8, 'Sophia Taylor', 82000),
+(9, 'David Anderson', 60000),
+(10, 'Daniel Thomas', 70000);
+
+-- Insert records into the Aircraft table
 INSERT INTO Aircraft (aid, aname, cruisingrange) VALUES
-(1, 'Boeing 747', 8000),
-(2, 'Airbus A320', 6100),
-(3, 'Boeing 777', 9500),
-(4, 'Airbus A380', 15000),
-(5, 'Cessna 172', 1300),
-(6, 'Gulfstream G650', 13000),
-(7, 'Embraer E190', 5300),
-(8, 'Boeing 737', 5600),
-(9, 'Airbus A350', 8100),
-(10, 'Bombardier CRJ', 3000);
--- Inserting into Flights
-INSERT INTO Flights (flno, from_city, to_city, distance, departs, arrives, price) VALUES
-(1, 'Los Angeles', 'New York', 4000, '08:00:00', '16:00:00', 500),
-(2, 'San Francisco', 'Chicago', 3000, '09:00:00', '15:00:00', 400),
-(3, 'Dallas', 'Miami', 2000, '10:00:00', '14:00:00', 300),
-(4, 'Seattle', 'Boston', 3500, '11:00:00', '19:00:00', 450),
-(5, 'Denver', 'Houston', 1500, '12:00:00', '16:00:00', 350),
-(6, 'Atlanta', 'Las Vegas', 2500, '13:00:00', '17:00:00', 370),
-(7, 'Los Angeles', 'Honolulu', 2700, '14:00:00', '20:00:00', 600),
-(8, 'Orlando', 'San Diego', 2900, '15:00:00', '21:00:00', 500),
-(9, 'Washington', 'Phoenix', 3200, '16:00:00', '22:00:00', 480),
-(10, 'Boston', 'San Francisco', 4200, '17:00:00', '23:00:00', 550);
--- Inserting into Certified
+(1, 'Boeing 737', 3000),
+(2, 'Airbus A320', 3500),
+(3, 'Boeing 747', 5000),
+(4, 'Airbus A380', 8000),
+(5, 'Cessna 172', 1000),
+(6, 'Boeing 777', 6000),
+(7, 'Airbus A350', 6500),
+(8, 'Embraer E190', 2500),
+(9, 'Bombardier CRJ200', 2200),
+(10, 'Boeing 787', 7000);
+
+-- Insert records into the Certified table
 INSERT INTO Certified (eid, aid) VALUES
 (1, 1),
 (1, 2),
+(1, 3),
 (2, 3),
 (2, 4),
-(2, 5),
+(3, 5),
 (3, 6),
-(3, 7),
-(4, 8),
-(4, 9),
-(5, 10),
+(4, 6),
+(4, 7),
+(5, 8),
+(5, 9),
 (6, 1),
-(6, 3),
-(6, 5),
-(7, 7),
-(7, 8),
-(8, 2),
-(8, 4),
-(9, 6),
-(9, 9),
-(10, 1);
+(7, 2),
+(8, 3),
+(9, 4),
+(10, 5);
+
+-- Insert records into the Flights table
+INSERT INTO Flights (flno, from_city, to_city, distance, departs, arrives, price) VALUES
+(101, 'Los Angeles', 'New York', 2500, '08:00', '16:00', 300),
+(102, 'San Francisco', 'Chicago', 2000, '09:00', '15:00', 250),
+(103, 'New York', 'Miami', 1300, '07:00', '12:00', 200),
+(104, 'Seattle', 'Boston', 2400, '10:00', '18:00', 280),
+(105, 'Houston', 'Denver', 1000, '06:00', '09:00', 150),
+(106, 'Dallas', 'Atlanta', 800, '12:00', '15:00', 180),
+(107, 'Los Angeles', 'Honolulu', 2500, '14:00', '22:00', 400),
+(108, 'Chicago', 'Los Angeles', 2500, '13:00', '21:00', 320),
+(109, 'Miami', 'San Francisco', 3000, '11:00', '19:00', 350),
+(110, 'Denver', 'New York', 2000, '05:00', '11:00', 270);
+
+
+c) Find the names of aircraft such that all pilots certified to operate them earn more than 80,000
+
 SELECT a.aname
 FROM Aircraft a
 JOIN Certified c ON a.aid = c.aid
 JOIN Employees e ON c.eid = e.eid
 GROUP BY a.aname
 HAVING MIN(e.salary) > 80000;
+
+d) For each pilot who is certified for more than three aircraft, find the eid and the maximum cruising range of the aircraft that he (or she) is certified for
+
 SELECT c.eid, MAX(a.cruisingrange) AS max_cruisingrange
 FROM Certified c
 JOIN Aircraft a ON c.aid = a.aid
 GROUP BY c.eid
 HAVING COUNT(c.aid) > 3;
+
+e) Find the names of pilots whose salary is less than the price of the cheapest route from Los Angeles to Honolulu
+
 SELECT e.ename
 FROM Employees e
 WHERE e.salary < (
- SELECT MIN(f.price)
- FROM Flights f
- WHERE f.from_city = 'Los Angeles' AND f.to_city = 'Honolulu'
+    SELECT MIN(f.price)
+    FROM Flights f
+    WHERE f.from_city = 'Los Angeles' AND f.to_city = 'Honolulu'
 );
+
+f) Find the second highest salary of an employee
+
 SELECT MAX(salary) AS second_highest_salary
 FROM Employees
-WHERE salary < (SELECT MAX(salary) FROM Employees);
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM Employees
+);
+
