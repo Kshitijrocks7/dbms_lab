@@ -1,0 +1,108 @@
+
+create database Airline;
+use Airline;
+CREATE TABLE Employees (
+ eid INTEGER PRIMARY KEY,
+ ename VARCHAR(100),
+ salary INTEGER
+);
+CREATE TABLE Aircraft (
+ aid INTEGER PRIMARY KEY,
+ aname VARCHAR(100),
+ cruisingrange INTEGER
+);
+CREATE TABLE Flights (
+ flno INTEGER PRIMARY KEY,
+ from_city VARCHAR(100),
+ to_city VARCHAR(100),
+ distance INTEGER,
+ departs TIME,
+ arrives TIME,
+ price INTEGER
+);
+CREATE TABLE Certified (
+ eid INTEGER,
+ aid INTEGER,
+ PRIMARY KEY (eid, aid),
+ FOREIGN KEY (eid) REFERENCES Employees(eid),
+ FOREIGN KEY (aid) REFERENCES Aircraft(aid)
+);
+-- Inserting into Employees
+INSERT INTO Employees (eid, ename, salary) VALUES
+(1, 'John Doe', 85000),
+(2, 'Jane Smith', 90000),
+(3, 'Emily Johnson', 75000),
+(4, 'Michael Brown', 95000),
+(5, 'Chris Davis', 78000),
+(6, 'Jessica Wilson', 82000),
+(7, 'Daniel Martinez', 60000),
+(8, 'Laura Taylor', 88000),
+(9, 'David Anderson', 76000),
+(10, 'Sarah Thomas', 83000);
+-- Inserting into Aircraft
+INSERT INTO Aircraft (aid, aname, cruisingrange) VALUES
+(1, 'Boeing 747', 8000),
+(2, 'Airbus A320', 6100),
+(3, 'Boeing 777', 9500),
+(4, 'Airbus A380', 15000),
+(5, 'Cessna 172', 1300),
+(6, 'Gulfstream G650', 13000),
+(7, 'Embraer E190', 5300),
+(8, 'Boeing 737', 5600),
+(9, 'Airbus A350', 8100),
+(10, 'Bombardier CRJ', 3000);
+-- Inserting into Flights
+INSERT INTO Flights (flno, from_city, to_city, distance, departs, arrives, price) VALUES
+(1, 'Los Angeles', 'New York', 4000, '08:00:00', '16:00:00', 500),
+(2, 'San Francisco', 'Chicago', 3000, '09:00:00', '15:00:00', 400),
+(3, 'Dallas', 'Miami', 2000, '10:00:00', '14:00:00', 300),
+(4, 'Seattle', 'Boston', 3500, '11:00:00', '19:00:00', 450),
+(5, 'Denver', 'Houston', 1500, '12:00:00', '16:00:00', 350),
+(6, 'Atlanta', 'Las Vegas', 2500, '13:00:00', '17:00:00', 370),
+(7, 'Los Angeles', 'Honolulu', 2700, '14:00:00', '20:00:00', 600),
+(8, 'Orlando', 'San Diego', 2900, '15:00:00', '21:00:00', 500),
+(9, 'Washington', 'Phoenix', 3200, '16:00:00', '22:00:00', 480),
+(10, 'Boston', 'San Francisco', 4200, '17:00:00', '23:00:00', 550);
+-- Inserting into Certified
+INSERT INTO Certified (eid, aid) VALUES
+(1, 1),
+(1, 2),
+(2, 3),
+(2, 4),
+(2, 5),
+(3, 6),
+(3, 7),
+(4, 8),
+(4, 9),
+(5, 10),
+(6, 1),
+(6, 3),
+(6, 5),
+(7, 7),
+(7, 8),
+(8, 2),
+(8, 4),
+(9, 6),
+(9, 9),
+(10, 1);
+SELECT a.aname
+FROM Aircraft a
+JOIN Certified c ON a.aid = c.aid
+JOIN Employees e ON c.eid = e.eid
+GROUP BY a.aname
+HAVING MIN(e.salary) > 80000;
+SELECT c.eid, MAX(a.cruisingrange) AS max_cruisingrange
+FROM Certified c
+JOIN Aircraft a ON c.aid = a.aid
+GROUP BY c.eid
+HAVING COUNT(c.aid) > 3;
+SELECT e.ename
+FROM Employees e
+WHERE e.salary < (
+ SELECT MIN(f.price)
+ FROM Flights f
+ WHERE f.from_city = 'Los Angeles' AND f.to_city = 'Honolulu'
+);
+SELECT MAX(salary) AS second_highest_salary
+FROM Employees
+WHERE salary < (SELECT MAX(salary) FROM Employees);
