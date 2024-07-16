@@ -1,0 +1,162 @@
+-- Create the Department table
+CREATE TABLE Department (
+    D_name VARCHAR(50),
+    D_no INT PRIMARY KEY,
+    D_Mgr_id INT,
+    Mgr_start_date DATE,
+   
+);
+
+-- Create the Employee table
+CREATE TABLE Employee (
+    F_name VARCHAR(50),
+    L_name VARCHAR(50),
+    Emp_id INT PRIMARY KEY,
+    Bdate DATE,
+    Address VARCHAR(100),
+    Gender VARCHAR(10),
+    Salary INT,
+    Super_Emp_id INT,
+    D_no INT,
+    FOREIGN KEY (Super_Emp_id) REFERENCES Employee(Emp_id),
+    FOREIGN KEY (D_no) REFERENCES Department(D_no)
+);
+
+
+alter table department add constraint fg_key foreign key(D_mgr_id)references employee(emp_id);
+
+-- Create the Dept_Location table
+CREATE TABLE Dept_Location (
+    D_no INT,
+    D_location VARCHAR(50),
+    PRIMARY KEY (D_no, D_location),
+    FOREIGN KEY (D_no) REFERENCES Department(D_no)
+);
+
+-- Create the Project table
+CREATE TABLE Project (
+    P_name VARCHAR(50),
+    P_number INT PRIMARY KEY,
+    P_location VARCHAR(50),
+    D_no INT,
+    FOREIGN KEY (D_no) REFERENCES Department(D_no)
+);
+
+-- Create the Works_on table
+CREATE TABLE Works_on (
+    Emp_id INT,
+    P_no INT,
+    Hours INT,
+    PRIMARY KEY (Emp_id, P_no),
+    FOREIGN KEY (Emp_id) REFERENCES Employee(Emp_id),
+    FOREIGN KEY (P_no) REFERENCES Project(P_number)
+);
+
+-- Create the Dependent table
+CREATE TABLE Dependent (
+    Emp_id INT,
+    Dependent_name VARCHAR(50),
+    Gender VARCHAR(10),
+    Bdate DATE,
+    Relationship VARCHAR(50),
+    PRIMARY KEY (Emp_id, Dependent_name),
+    FOREIGN KEY (Emp_id) REFERENCES Employee(Emp_id)
+);
+
+
+b) Insert around 10 records in each of the tables
+
+-- Insert records into the Employee table
+INSERT INTO Employee (F_name, L_name, Emp_id, Bdate, Address, Gender, Salary, Super_Emp_id, D_no) VALUES
+('John', 'Doe', 1, '1980-01-01', '123 Elm St', 'M', 50000, NULL, 1),
+('Jane', 'Smith', 2, '1985-02-02', '456 Oak St', 'F', 60000, 1, 1),
+('Paul', 'Johnson', 3, '1990-03-03', '789 Pine St', 'M', 55000, 1, 2),
+('Emily', 'Davis', 4, '1992-04-04', '101 Maple St', 'F', 62000, 2, 2),
+('Michael', 'Brown', 5, '1988-05-05', '202 Birch St', 'M', 58000, 2, 1),
+('Linda', 'Wilson', 6, '1987-06-06', '303 Cedar St', 'F', 63000, 1, 3),
+('Robert', 'Taylor', 7, '1986-07-07', '404 Spruce St', 'M', 52000, 3, 3),
+('Patricia', 'Moore', 8, '1989-08-08', '505 Aspen St', 'F', 64000, 3, 2),
+('James', 'Anderson', 9, '1984-09-09', '606 Willow St', 'M', 59000, 1, 1),
+('Barbara', 'Thomas', 10, '1991-10-10', '707 Poplar St', 'F', 61000, 2, 3);
+
+-- Insert records into the Department table
+INSERT INTO Department (D_name, D_no, D_Mgr_id, Mgr_start_date) VALUES
+('HR', 1, 1, '2020-01-01'),
+('Finance', 2, 2, '2019-01-01'),
+('Engineering', 3, 3, '2018-01-01');
+
+-- Insert records into the Dept_Location table
+INSERT INTO Dept_Location (D_no, D_location) VALUES
+(1, 'New York'),
+(2, 'Los Angeles'),
+(3, 'Chicago'),
+(1, 'Boston'),
+(2, 'San Francisco'),
+(3, 'Seattle');
+
+-- Insert records into the Project table
+INSERT INTO Project (P_name, P_number, P_location, D_no) VALUES
+('Project A', 101, 'New York', 1),
+('Project B', 102, 'Los Angeles', 2),
+('Project C', 103, 'Chicago', 3),
+('Project D', 104, 'Boston', 1),
+('Project E', 105, 'San Francisco', 2),
+('Project F', 106, 'Seattle', 3),
+('Project G', 107, 'New York', 1),
+('Project H', 108, 'Los Angeles', 2),
+('Project I', 109, 'Chicago', 3),
+('Project J', 110, 'Boston', 1);
+
+-- Insert records into the Works_on table
+INSERT INTO Works_on (Emp_id, P_no, Hours) VALUES
+(1, 101, 10),
+(2, 101, 15),
+(3, 102, 20),
+(4, 102, 25),
+(5, 103, 30),
+(6, 103, 35),
+(7, 104, 40),
+(8, 104, 45),
+(9, 105, 50),
+(10, 105, 55);
+
+-- Insert records into the Dependent table
+INSERT INTO Dependent (Emp_id, Dependent_name, Gender, Bdate, Relationship) VALUES
+(1, 'Anna', 'F', '2010-01-01', 'Daughter'),
+(2, 'Peter', 'M', '2011-02-02', 'Son'),
+(3, 'Laura', 'F', '2012-03-03', 'Daughter'),
+(4, 'Sophia', 'F', '2013-04-04', 'Daughter'),
+(5, 'David', 'M', '2014-05-05', 'Son'),
+(6, 'Emma', 'F', '2015-06-06', 'Daughter'),
+(7, 'Lucas', 'M', '2016-07-07', 'Son'),
+(8, 'Olivia', 'F', '2017-08-08', 'Daughter'),
+(9, 'Mason', 'M', '2018-09-09', 'Son'),
+(10, 'Ella', 'F', '2019-10-10', 'Daughter');
+
+
+c) Find the names and address of all employees who work in the same department
+
+SELECT e1.F_name, e1.L_name, e1.Address
+FROM Employee e1
+JOIN Employee e2 ON e1.D_no = e2.D_no
+WHERE e1.Emp_id <> e2.Emp_id;
+
+d) Retrieve a list of employees and the projects they are working on, ordered by department and, within each department, ordered alphabetically by last name, then first name
+
+
+SELECT d.D_name, e.L_name, e.F_name, p.P_name
+FROM Employee e
+JOIN Works_on w ON e.Emp_id = w.Emp_id
+JOIN Project p ON w.P_no = p.P_number
+JOIN Department d ON e.D_no = d.D_no
+ORDER BY d.D_name, e.L_name, e.F_name;
+
+
+e) Create a view Dept_info that gives details of department name, number of employees, and total salary of each employee
+
+CREATE VIEW Dept_info AS
+SELECT d.D_name, COUNT(e.Emp_id) AS num_employees, SUM(e.Salary) AS total_salary
+FROM Department d
+JOIN Employee e ON d.D_no = e.D_no
+GROUP BY d.D_name;
+
