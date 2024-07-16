@@ -1,0 +1,84 @@
+
+create database lab;
+use lab;
+-- Creating the Sailors table
+CREATE TABLE Sailors (
+ sid INTEGER PRIMARY KEY,
+ sname VARCHAR(50),
+ rating INTEGER,
+ age REAL
+);
+-- Creating the Boats table
+CREATE TABLE Boats (
+ bid INTEGER PRIMARY KEY,
+ bname VARCHAR(50),
+ color VARCHAR(20)
+);
+-- Creating the Reserves table
+CREATE TABLE Reserves (
+ sid INTEGER,
+ bid INTEGER,
+ day DATE,
+ PRIMARY KEY (sid, bid, day),
+ FOREIGN KEY (sid) REFERENCES Sailors(sid),
+ FOREIGN KEY (bid) REFERENCES Boats(bid)
+);
+-- Inserting records into the Sailors table
+INSERT INTO Sailors (sid, sname, rating, age) VALUES
+(1, 'John', 5, 25.5),
+(2, 'Paul', 7, 30.0),
+(3, 'George', 8, 22.3),
+(4, 'Ringo', 3, 35.4),
+(5, 'Mick', 6, 28.7),
+(6, 'Keith', 7, 24.1),
+(7, 'Charlie', 4, 32.8),
+(8, 'Ronnie', 5, 26.4),
+(9, 'Brian', 8, 29.0),
+(10, 'Roger', 6, 27.2);
+-- Inserting records into the Boats table
+INSERT INTO Boats (bid, bname, color) VALUES
+(101, 'Sea Breeze', 'red'),
+(102, 'Sunset', 'blue'),
+(103, 'Wave Rider', 'green'),
+(104, 'Ocean Pearl', 'red'),
+(105, 'Sea Hawk', 'yellow'),
+(106, 'Blue Lagoon', 'blue'),
+(107, 'Coral Reef', 'red'),
+(108, 'Sunshine', 'yellow'),
+(109, 'Wind Walker', 'green'),
+(110, 'Wave Breaker', 'blue');
+-- Inserting records into the Reserves table
+INSERT INTO Reserves (sid, bid, day) VALUES
+(1, 101, '2023-06-01'),
+(2, 102, '2023-06-02'),
+(3, 103, '2023-06-03'),
+(4, 104, '2023-06-04'),
+(5, 105, '2023-06-05'),
+(6, 106, '2023-06-06'),
+(7, 107, '2023-06-07'),
+(8, 108, '2023-06-08'),
+(9, 109, '2023-06-09'),
+(10, 110, '2023-06-10'),
+(1, 104, '2023-06-11'),
+(2, 101, '2023-06-12'),
+(3, 107, '2023-06-13'),
+(4, 103, '2023-06-14'),
+(5, 109, '2023-06-15');
+SELECT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+JOIN Boats b ON r.bid = b.bid
+WHERE b.color = 'red'
+ORDER BY s.age;
+SELECT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+WHERE r.bid = 103;
+SELECT sname, age
+FROM Sailors
+ORDER BY age ASC
+LIMIT 1;
+SELECT rating, AVG(age) AS average_age
+FROM Sailors
+GROUP BY rating
+HAVING COUNT(sid) >= 2;
