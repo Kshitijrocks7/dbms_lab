@@ -1,0 +1,109 @@
+
+create database prgrm2;
+use prgrm2;
+CREATE TABLE GUIDE (
+ Guide_No INTEGER PRIMARY KEY,
+ Guide_name VARCHAR(100) NOT NULL,
+ Guide_research_domain VARCHAR(100),
+ Contact_No BIGINT,
+ Email_Id VARCHAR(100)
+);
+CREATE TABLE STUDENT (
+ Rollno INTEGER PRIMARY KEY,
+ Name VARCHAR(100) NOT NULL,
+ Sem INTEGER,
+ Degree VARCHAR(100),
+ Contact_no BIGINT,
+ Guide_No INTEGER,
+ FOREIGN KEY (Guide_No) REFERENCES GUIDE(Guide_No)
+);
+CREATE TABLE PROJECT (
+ Project_No INTEGER PRIMARY KEY,
+ Project_title VARCHAR(200) NOT NULL,
+ Project_Area VARCHAR(100),
+ Start_dt DATE,
+ Guide_No INTEGER,
+ FOREIGN KEY (Guide_No) REFERENCES GUIDE(Guide_No)
+);
+CREATE TABLE `GROUP` (
+ Group_Code INTEGER,
+ Roll_No INTEGER,
+ PRIMARY KEY (Group_Code, Roll_No),
+ FOREIGN KEY (Roll_No) REFERENCES STUDENT(Rollno)
+);
+CREATE TABLE PROJECT_GROUP (
+ Group_Code INTEGER,
+ Project_No INTEGER,
+ no_of_students INTEGER,
+ PRIMARY KEY (Group_Code, Project_No),
+ FOREIGN KEY (Group_Code) REFERENCES `GROUP`(Group_Code),
+ FOREIGN KEY (Project_No) REFERENCES PROJECT(Project_No)
+);
+-- Inserting into GUIDE
+INSERT INTO GUIDE VALUES (1, 'Dr. John Smith', 'Data Base', 1234567890, 
+'john.smith@example.com');
+INSERT INTO GUIDE VALUES (2, 'Dr. Alice Johnson', 'Machine Learning', 2345678901, 
+'alice.johnson@example.com');
+INSERT INTO GUIDE VALUES (3, 'Dr. Robert Brown', 'Data Base', 3456789012, 
+'robert.brown@example.com');
+INSERT INTO GUIDE VALUES (4, 'Dr. Emma Davis', 'Artificial Intelligence', 4567890123, 
+'emma.davis@example.com');
+-- Inserting into STUDENT
+INSERT INTO STUDENT VALUES (101, 'Alice', 6, 'B.Tech', 9876543210, 1);
+INSERT INTO STUDENT VALUES (102, 'Bob', 6, 'B.Tech', 8765432109, 2);
+INSERT INTO STUDENT VALUES (103, 'Charlie', 6, 'B.Tech', 7654321098, 1);
+INSERT INTO STUDENT VALUES (104, 'David', 6, 'B.Tech', 6543210987, 3);
+INSERT INTO STUDENT VALUES (105, 'Eve', 6, 'B.Tech', 5432109876, 2);
+INSERT INTO STUDENT VALUES (106, 'Frank', 6, 'B.Tech', 4321098765, 1);
+INSERT INTO STUDENT VALUES (107, 'Grace', 6, 'B.Tech', 3210987654, 3);
+INSERT INTO STUDENT VALUES (108, 'Hannah', 6, 'B.Tech', 2109876543, 1);
+INSERT INTO STUDENT VALUES (109, 'Ivy', 6, 'B.Tech', 1098765432, 4);
+INSERT INTO STUDENT VALUES (110, 'Jack', 6, 'B.Tech', 9876543211, 4);
+-- Inserting into PROJECT
+INSERT INTO PROJECT VALUES (1, 'Database Management System', 'Data Base', '2024-
+01-01', 1);
+INSERT INTO PROJECT VALUES (2, 'Machine Learning Algorithms', 'Machine Learning', 
+'2024-01-01', 2);
+INSERT INTO PROJECT VALUES (3, 'AI in Healthcare', 'Artificial Intelligence', '2024-01-01', 
+4);
+INSERT INTO PROJECT VALUES (4, 'Data Mining', 'Data Base', '2024-01-01', 3);
+-- Inserting into GROUP
+INSERT INTO `GROUP` VALUES (1, 101);
+INSERT INTO `GROUP` VALUES (1, 102);
+INSERT INTO `GROUP` VALUES (2, 103);
+INSERT INTO `GROUP` VALUES (2, 104);
+INSERT INTO `GROUP` VALUES (3, 105);
+INSERT INTO `GROUP` VALUES (3, 106);
+INSERT INTO `GROUP` VALUES (4, 107);
+INSERT INTO `GROUP` VALUES (4, 108);
+INSERT INTO `GROUP` VALUES (5, 109);
+INSERT INTO `GROUP` VALUES (5, 110);
+-- Inserting into PROJECT_GROUP
+INSERT INTO PROJECT_GROUP VALUES (1, 1, 2);
+INSERT INTO PROJECT_GROUP VALUES (2, 1, 2);
+INSERT INTO PROJECT_GROUP VALUES (3, 2, 2);
+INSERT INTO PROJECT_GROUP VALUES (4, 3, 2);
+INSERT INTO PROJECT_GROUP VALUES (5, 4, 2);
+1.
+SELECT g.Guide_name, COUNT(pg.Group_Code) AS Num_Groups
+FROM GUIDE g
+JOIN PROJECT p ON g.Guide_No = p.Guide_No
+JOIN PROJECT_GROUP pg ON p.Project_No = pg.Project_No
+GROUP BY g.Guide_name
+HAVING COUNT(pg.Group_Code) > 2;
+2.
+SELECT p.Project_No, p.Project_title, g.Guide_name
+FROM PROJECT p
+JOIN GUIDE g ON p.Guide_No = g.Guide_No
+WHERE p.Project_Area = 'Data Base';
+3.
+CREATE VIEW student_project_details AS
+SELECT s.Name AS Student_Name, 
+ p.Project_title AS Project_Name, 
+ gu.Guide_name AS Guide_Name
+FROM STUDENT s
+JOIN `GROUP` g ON s.Rollno = g.Roll_No
+JOIN PROJECT_GROUP pg ON g.Group_Code = pg.Group_Code
+JOIN PROJECT p ON pg.Project_No = p.Project_No
+JOIN GUIDE gu ON p.Guide_No = gu.Guide_No;
+ 
